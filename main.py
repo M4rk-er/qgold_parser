@@ -11,7 +11,8 @@ ADJUSTABLE_URL = 'https://jewelers.services/productcore/api/pl/Jewelry-Rings-Adj
 ADJUSTABLE_FILE_NAME = 'adjustable_rings.xlsx'
 
 
-async def stone_main():
+async def stone_main() -> None:
+    """Главная функция для колец с камнями."""
     current_url = web_requests.current_paramet_url(STONES_URL)
     response = web_requests.post_request(
         current_url, web_requests.FILTERS_STONE
@@ -30,7 +31,8 @@ async def stone_main():
     excel_utils.update_excel_data(rings_in_dicts, STONES_FILE_NAME)
 
 
-async def adjustable_main():
+async def adjustable_main() -> None:
+    """Главная функция для регулируемых колец."""
     current_url = web_requests.current_paramet_url(ADJUSTABLE_URL)
     response = web_requests.post_request(
         current_url, web_requests.FILTERS_ADJUSTABLE
@@ -45,7 +47,8 @@ async def adjustable_main():
     excel_utils.update_excel_data(rings_in_dict, ADJUSTABLE_FILE_NAME)
 
 
-async def run_periodically():
+async def run_periodically() -> None:
+    """Запуск главных функций паралельно раз в какой то период."""
     while True:
         time = input('Введите время для периодичности запросов в секундах: ')
         await asyncio.gather(stone_main(), adjustable_main())

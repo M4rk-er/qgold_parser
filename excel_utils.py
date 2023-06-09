@@ -1,11 +1,13 @@
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.worksheet import Worksheet
 
 import utils
 
 
-def create_columns_in_excel(column_titels, file_name):
+def create_columns_in_excel(column_titels: list, file_name: str) -> None:
+    """Создает названия столцов в таблице Excel."""
     workbook = Workbook()
     rings = workbook.active
     for col_index, column_name in enumerate(column_titels, 1):
@@ -16,7 +18,8 @@ def create_columns_in_excel(column_titels, file_name):
     workbook.save(file_name)
 
 
-def formated_table(sheet, file_name):
+def formated_table(sheet: Worksheet, file_name: str) -> None:
+    """Форматирование внешнего вида таблицы."""
     workbook = sheet.parent
 
     max_lengths = {}
@@ -53,7 +56,8 @@ def formated_table(sheet, file_name):
     workbook.save(file_name)
 
 
-def update_excel_data(data, file_name):
+def update_excel_data(data: dict, file_name: str) -> None:
+    """Обновление информации в таблицы Ecxel."""
     print('Сохраняю информацию в Excel')
 
     workbook = load_workbook(file_name)

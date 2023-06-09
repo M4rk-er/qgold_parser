@@ -5,7 +5,8 @@ VIDE0_URL = 'https://images.jewelers.services/0/Videos/'
 ADJUSTABLE_URL = 'https://jewelers.services/productcore/api/pd/'
 
 
-def generate_family_ring_links(ring):
+def generate_family_ring_links(ring: dict) -> list:
+    """Получение списка ссылок колец с камнями с главной страницы."""
     rings_data = []
     family = ring.get('Family')
     product_detail = family.get('ProductDetails')
@@ -17,7 +18,8 @@ def generate_family_ring_links(ring):
     return rings_data
 
 
-def generate_ring_links(ring):
+def generate_ring_links(ring: dict) -> list:
+    """Получение ссылок для всех колец с камнями."""
     rings_data = []
     sizes = ring.get('Sizes')
     for ring in sizes:
@@ -28,7 +30,11 @@ def generate_ring_links(ring):
     return rings_data
 
 
-def generate_list_links_stone(rings):
+def generate_list_links_stone(rings: dict) -> list:
+    """
+    Проверяет к какому типу относиться кольцо, генерирует и
+    возрашает список всех ссылок.
+    """
     all_api_links = []
     all_rings = rings['IndexedProducts']['Results']
     for ring in all_rings:
@@ -46,7 +52,8 @@ def generate_list_links_stone(rings):
     return all_api_links
 
 
-def generate_links_list_adjustable(data):
+def generate_links_list_adjustable(data: dict) -> list:
+    """Генерация ссылок для регулируемых колец."""
     links_list = []
     results = data.get('IndexedProducts', {}).get('Results')
     for product in results:
@@ -57,39 +64,46 @@ def generate_links_list_adjustable(data):
     return links_list
 
 
-def is_family(ring_data):
+def is_family(ring_data: dict) -> bool:
+    """Проверка: относиться ли кольцо к категории сеймейных."""
     return bool(
         ring_data.get('Family', {}).get('ProductDetails')
     )
 
 
-def is_not_family(ring_data):
+def is_not_family(ring_data: dict) -> bool:
+    """Проверка: НЕ относиться ли кольцо к категории сеймейных."""
     if ring_data.get('Product') and ring_data.get('HasSizes'):
         return True
     return False
 
 
-def description_parser(ring_data):
+def description_parser(ring_data: dict) -> str:
+    """Получение информации о названии изделия."""
     description = ring_data.get('Product', {}).get('Description')
     return description
 
 
-def size_parser(ring_data):
+def size_parser(ring_data: dict) -> str:
+    """Получении информации о размере изделия."""
     size = ring_data.get('Product', {}).get('Size')
     return size
 
 
-def msrp_parser(ring_data):
+def msrp_parser(ring_data: dict) -> str:
+    """Получение кольца о цене изделия."""
     msrp = ring_data.get('Product', {}).get('MSRP')
     return msrp
 
 
-def amount_in_stoock_parser(ring_data):
+def amount_in_stoock_parser(ring_data: dict) -> str:
+    """Получение количества изделий в наличии."""
     amount = ring_data.get('Product', {}).get('InStock')
     return amount
 
 
-def images_list_parser(ring_data):
+def images_list_parser(ring_data: dict) -> list:
+    """Получение списка картинок изделия."""
     images = []
     images_data = ring_data.get('Images')
     for image in images_data:
@@ -99,7 +113,8 @@ def images_list_parser(ring_data):
     return images
 
 
-def video_parser(ring_data):
+def video_parser(ring_data: dict) -> str:
+    """Получение видео изделия."""
     video_data = ring_data.get('Video')
     if not video_data:
         return '-'
@@ -108,7 +123,8 @@ def video_parser(ring_data):
     return video_link
 
 
-def product_detail_parser(ring_data):
+def product_detail_parser(ring_data: dict) -> str:
+    """Получние деталей изделия."""
     ring_detail = {}
     specs = ring_data.get('Specifications')
     for spec in specs:
@@ -118,7 +134,10 @@ def product_detail_parser(ring_data):
     return ring_detail
 
 
-def main_parser(ring_data):
+def main_parser(ring_data: dict) -> dict:
+    """
+    Преобразование информации о товаре в вид, для сохранения в таблицу.
+    """
 
     description = description_parser(ring_data)
     size = size_parser(ring_data)
@@ -141,14 +160,18 @@ def main_parser(ring_data):
     return data
 
 
-def make_advanced_details(ring_data):
+def make_advanced_details(ring_data: dict) -> dict:
+    """Слияние деталей изделия с основной информацией."""
     data = ring_data
     details = data.pop('Details')
     merged = {**data, **details}
     return merged
 
 
-def get_longest_detail(details):
+def get_longest_detail(details: dict) -> list:
+    """
+    Получение информации о товаре с самым большим списком деталей.
+    """
     max_length = list(
         map(
             lambda d: len(d.get('Details',  '')),
@@ -160,7 +183,10 @@ def get_longest_detail(details):
     return list(res.keys())
 
 
-def turn_ring_info_into_dicts(ring):
+def turn_ring_info_into_dicts(ring: list) -> list:
+    """
+    Преобразование и получение списка словарей для сохранения в таблицу.
+    """
     print('Преобразую информацию')
     end = []
     for elem in ring:
@@ -169,7 +195,8 @@ def turn_ring_info_into_dicts(ring):
     return end
 
 
-def generate_column_titles(formated_ring_data):
+def generate_column_titles(formated_ring_data: list) -> list:
+    """Генерация названий столбцов."""
     column_titles = list(formated_ring_data[0].keys())
     all_details = get_longest_detail(formated_ring_data)
     column_titles.remove('Details')
