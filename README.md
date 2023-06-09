@@ -18,11 +18,12 @@ cd qgold_parser && python3 -m venv venv && . venv bin activate
 ```
 pip install -r requirements.txt
 ```
-```
+
 ### 4. Запустите функции:
 ```
 python main.py
 
+```
 ```
 Требования к проекту: 
 - Парсим не все товары, а первую страницу данной категории: https://qgold.com/pl/JewelryRings-2·Stone-Rings и первую страницу данной: https://qgold.com/pl/Jewelry-RingsAdjustable
