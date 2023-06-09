@@ -19,7 +19,9 @@ async def stone_main():
 
     links = utils.generate_list_links_stone(response)
     additional_requsts = await web_requests.responses_to_get_ring_data(links)
-    rings_data = await web_requests.extract_all_info_about_rings(additional_requsts)
+    rings_data = await web_requests.extract_all_info_about_rings(
+        additional_requsts
+    )
     rings_in_dicts = utils.turn_ring_info_into_dicts(rings_data)
 
     col = utils.generate_column_titles(rings_in_dicts)
